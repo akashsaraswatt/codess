@@ -866,4 +866,230 @@ endmodule
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # KERNEL: arr='{9, 5, 9, 9, 6, 10, 5, 9, 3, 5, 9, 10, 6, 6, 9, 9, 9}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	Q -Write a constraint for the following condition An array has 10 elements,Each element has unique value,sum of all elements should be 100 ?
+class cl;
+  rand int a [];
+  constraint c1 {a.size() == 10;
+                 foreach(a[i])
+                   a[i] inside {[0:100]};
+                 a.sum()== 100;
+                 unique {a}; }
+endclass
+module tb;
+   cl cl_h;
+initial
+   begin
+     cl_h = new();
+     cl_h.randomize();
+     $display("%p",cl_h.a);
+     $display("sum = %d", cl_h.a.sum());
+   end
+endmodule
+//////////////////?//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# KERNEL: '{31, 0, 13, 1, 14, 21, 5, 6, 7, 2}
+# KERNEL: sum =         100
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Q -Write a constraint to generate 10 unique numbers in between 99 to 100. ?
+ class main;
+randc int a;
+real renum;
+constraint a1{a inside{[990:1000]};}
+  
+function void post_randomize();
+renum=a/10.0;
+  $display("the real number %0f",renum);
+endfunction
+endclass
+
+module tb;
+  main m;
+  initial begin
+    m= new();
+    repeat(10) begin
+      m.randomize();
+    end
+  end
+endmodule
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ # KERNEL: the real number 99.300000
+# KERNEL: the real number 99.700000
+# KERNEL: the real number 99.800000
+# KERNEL: the real number 99.000000
+# KERNEL: the real number 99.400000
+# KERNEL: the real number 99.200000
+# KERNEL: the real number 99.900000
+# KERNEL: the real number 99.600000
+# KERNEL: the real number 100.000000
+# KERNEL: the real number 99.100000
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ Q -Write a constraint to generate odd location of array contains even numbers and even locations contains odd numbers ?
+ class main;
+  rand bit [5:0] arr[];
+  constraint c1 { arr.size()==10;
+    foreach (arr[i])
+ if (i % 2 == 0)
+ arr[i] % 2 == 1;
+ else 
+ arr[i] % 2 == 0; 
+    }
+  function void print();
+    $display("arr=%p",arr);
+  endfunction
+endclass
+
+module tb;
+  main m;
+  initial begin
+    m= new();
+      m.randomize();
+      m.print();
+  end
+endmodule
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ # KERNEL: arr='{7, 36, 35, 20, 31, 44, 59, 24, 7, 24}
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ Q -Take a rand variable with array size 10,need to get unique values in each location without using unique 
+ keyword and for any of 2 locations we are not  to get same value?
+ class main;
+  rand bit [5:0] arr[];
+  constraint c1 { arr.size()==10;
+                 
+    foreach (arr[i])          // getting unique values without using unique keyword 
+      foreach (arr[j])
+        if(i!=j)
+          arr[i]!=arr[j];
+    }
+  function void print();
+    $display("arr=%p",arr);
+  endfunction
+endclass
+
+module tb;
+  main m;
+  initial begin
+    m= new();
+      m.randomize();
+      m.print();
+  end
+endmodule
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ # KERNEL: arr='{3, 23, 12, 10, 31, 44, 34, 33, 61, 18}
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ Q -Given a 32 bit address field as a class member, write a constraint to generate a random value 
+ such that it always has 10 bits as 1 and no two bits next to each other should be 1 ?
+ class pkt;
+ rand bit[31:0] addr;
+ constraint c_addr { $countones(addr) ==10;
+
+ foreach (addr[i])
+   if(addr[i] && i>0 )
+   addr[i] != addr[i-1]; }
+endclass
+module top;
+ pkt p;
+ initial begin
+ p=new;
+ repeat(5) begin
+ p.randomize();
+ $display(" addr=%b",p.addr);
+ end
+ end
+endmodule
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ # KERNEL:  addr=10010010010010010100001001000100
+# KERNEL:  addr=10010101001010010100000100000010
+# KERNEL:  addr=10000000010100010101010100010010
+# KERNEL:  addr=00010000101010000101010001010100
+# KERNEL:  addr=10100010000001010000010010010101
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Q - Write a constraint using dynamic array to print perfect cubes with alternate positive and negatives bases(starting with 0 and incrementing by 1) ?
+class packet;
+rand int a[];
+constraint valid{
+a.size() inside {[10:20]};
+foreach(a[i]){
+if(i%2==1) 
+  a[i] == ((i*(-1))**3);
+else a[i] == (i**3);}}
+function void post_randomize();
+$display("a = %p",a);
+endfunction
+endclass
+  
+module test;
+packet pkt=new();
+initial begin
+pkt.randomize();
+end
+endmodule
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ # KERNEL: a = '{0, 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000, 1331, 1728, 2197, 2744, 3375, 4096}
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Q -How many bins will be there in the following Coverage ?
+bit [7:0] data;
+bit [3:0] addr;
+covergroup cg;
+cp1: coverpoint data;
+cp2: coverpoint addr;
+cr1: cross cp1,cp2;
+endgroup
+ANS -     cp1: 64(auto_bin_max is 64 by default)
+          cp2: 16
+          cr1: 64*16(1024) (cross_auto_bin_max is unbounded by default)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Q - Write a code for generating Fibonacci series using constraint. ?
+class p;
+ rand int unsigned a [];
+  constraint c{a.size()==10;
+ foreach(a[i])
+ if(i>1)
+   a[i]==a[i-1]+a[i-2];   //an = a(n-1) +a(n-2); Fibonacci series concept
+ else
+ a[i]==i;}
+ function void display();
+   $display("a=%0p",a);
+ endfunction
+ endclass
+ module tb;
+ initial begin
+ p p1;
+ p1=new();
+ p1.randomize();
+ p1.display();
+ end
+ endmodule
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# KERNEL: a=0 1 1 2 3 5 8 13 21 34  
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Q -Write a SV code to generate a random number between 6.54 and 7.89 ?
+class sample;
+ rand int num;
+ real a;
+ constraint valid {num inside {[654:789]};}
+ function void post_randomize();
+ a=num/100.0;
+ $display("Number between 6.54 and 7.89 = %0f ", a);
+ endfunction
+endclass
+
+module tb;
+ sample s;
+ initial begin
+ s=new();
+ repeat(5)
+ s.randomize();
+ end
+endmodule
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# KERNEL: Number between 6.54 and 7.89 = 7.540000 
+# KERNEL: Number between 6.54 and 7.89 = 7.530000 
+# KERNEL: Number between 6.54 and 7.89 = 7.850000 
+# KERNEL: Number between 6.54 and 7.89 = 6.600000 
+# KERNEL: Number between 6.54 and 7.89 = 6.820000 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	
 	
