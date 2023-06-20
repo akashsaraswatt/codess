@@ -834,3 +834,36 @@ endmodule
 # KERNEL:  values of a =27 ,b=27, c=28 
 # KERNEL:  values of a =28 ,b=28, c=29 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Q - Write a piece of code to declare a dynamic array to hold 4 bit value &define the constraints for the conditions.
+The size of the dynamic array should be in between 10 to 20.
+Each elements in the array must have total 2 bits of one’s.(eg:1010)
+
+class main;
+  rand bit [3:0] arr[];
+  
+  constraint c1 { arr.size() inside {[10:20]}; }
+  
+  constraint c2 {
+    foreach (arr[i]) {
+      $countones(arr[i]) == 2;
+    }
+  }
+  function void print();
+    $display("arr=%p", arr);
+  endfunction
+endclass
+
+module tb;
+  main m;
+  
+  initial begin
+    m = new();
+    if (!m.randomize()) // Check if randomization was successful
+      $error("Failed to randomize 'm.arr' array.");   
+    m.print();
+  end
+endmodule
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# KERNEL: arr='{9, 5, 9, 9, 6, 10, 5, 9, 3, 5, 9, 10, 6, 6, 9, 9, 9}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
