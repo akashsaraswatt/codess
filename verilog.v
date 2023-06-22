@@ -342,6 +342,39 @@ Following is the Verilog code for an unsigned 8-bit adder/subtractor.
  end
  endmodule   
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Q - Write an verilog code which can count 4 ,9 ,11 ,14 and repeat again ?
+  module co (input clk,  output reg [3:0] count );
+
+always @(posedge clk)
+  begin
+  case(count)
+    4: count <= 9;
+    9: count <= 11;
+    11: count <= 14;
+    14: count <= 4;
+    default: count <= 4;
+  endcase
+end
+endmodule
+
+   /////////////////////////and TB as shown below  //////////////////////////////////////////////////
+module tb;
+  reg clk;
+  
+  wire count;
+ co DUT (.clk(clk),.count(count));
+  initial begin
+    clk=0;
+    repeat(30)
+      #5 clk=~clk;
+  end
+  initial begin
+    $dumpvars;
+    $dumpfile("dump.vcd");  //// to see the waveform in the EDA playground 
+  end
+  
+  
+endmodule
    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
