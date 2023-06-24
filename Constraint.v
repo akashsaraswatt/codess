@@ -1090,6 +1090,43 @@ endmodule
 # KERNEL: Number between 6.54 and 7.89 = 6.600000 
 # KERNEL: Number between 6.54 and 7.89 = 6.820000 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Q -write a constraint to randomly generate 10 real number b/w 1.356 to 2.683 ?
+class random_number_constraint;
+  rand int b;
+ real num;
+  constraint my_constraint {
+    b inside {[1356:2683]};
+  }
+  function void post_randomize();
+ num = b/1000.0;
+ endfunction
+endclass
 
+module top;
+  random_number_constraint rand_num;
+  initial begin
+    // Create a new random number generator
+    rand_num = new();
+    repeat(10)begin
+    // Generate a random number between 1.356 and 2.683
+    rand_num.randomize();
+    // Print the generated random number
+      $display("Random number: %0d and num=%0f", rand_num.b,rand_num.num);
+  end
+  end
+endmodule	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# KERNEL: Random number: 2682 and num=2.682000
+# KERNEL: Random number: 1367 and num=1.367000
+# KERNEL: Random number: 1371 and num=1.371000
+# KERNEL: Random number: 2184 and num=2.184000
+# KERNEL: Random number: 1464 and num=1.464000
+# KERNEL: Random number: 2396 and num=2.396000
+# KERNEL: Random number: 2013 and num=2.013000
+# KERNEL: Random number: 2307 and num=2.307000
+# KERNEL: Random number: 2015 and num=2.015000
+# KERNEL: Random number: 1499 and num=1.499000
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	
 	
