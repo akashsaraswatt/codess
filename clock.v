@@ -225,3 +225,128 @@ endmodule
 # KERNEL:  clk=0 & time is =38300
 # KERNEL:  clk=1 & time is =40000
 # KERNEL:  clk=0 & time is =48300
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Q-Verilog code for sequence detector 101 moore model ?
+module sequence_detector(seq_in, clock, reset, det_o);
+
+parameter IDLE   = 2'b00;
+parameter STATE1 = 2'b01;
+parameter STATE2 = 2'b10;
+parameter STATE3 = 2'b11;
+
+input seq_in,clock,reset;
+output det_o;
+reg [1:0]state,next_state;
+////////////////////////
+always@(posedge clock or posedge reset)
+begin
+if(reset)
+state <= IDLE;
+else
+state <= next_state;
+end
+/////////////////////			
+always@(state,seq_in)
+begin
+case(state)
+IDLE   : begin
+           if(seq_in==1) 
+		   next_state=STATE1;
+	       else
+	       next_state=IDLE;
+		   end
+STATE1 : begin
+           if(seq_in==0)
+	       next_state=STATE2;
+	       else
+	       next_state=STATE1;
+		   end
+STATE2 : begin
+           if(seq_in==1)
+	       next_state=STATE3;
+	       else 
+	       next_state=IDLE;
+		   end
+STATE3 : begin
+           if(seq_in==1)
+	       next_state=STATE1;
+	       else 
+	       next_state=STATE2;
+		   end
+
+
+default: next_state=IDLE;
+endcase
+end
+
+assign det_o = (state ==  STATE3) ? 1'b1:1'b0;
+
+endmodule
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Q-Verilog code for sequence detector 1011 moore model ?
+module sequence_detector(seq_in, clock, reset, det_o);
+
+parameter IDLE   = 3'b000,
+          STATE1 = 3'b001,
+          STATE2 = 3'b010, 
+          STATE3 = 3'b011,
+          STATE4 = 3'b100;
+
+input seq_in,clock,reset;
+output det_o;
+reg [2:0]state,next_state;
+////////////////////////
+always@(posedge clock or posedge reset)
+begin
+if(reset)
+state <= IDLE;
+else
+state <= next_state;
+end
+/////////////////////			
+always@(state,seq_in)
+begin
+case(state)
+IDLE   : begin
+           if(seq_in==1) 
+		   next_state=STATE1;
+	       else
+	       next_state=IDLE;
+		   end
+STATE1 : begin
+           if(seq_in==0)
+	       next_state=STATE2;
+	       else
+	       next_state=STATE1;
+		   end
+STATE2 : begin
+           if(seq_in==1)
+	       next_state=STATE3;
+	       else 
+	       next_state=IDLE;
+		   end
+STATE3 : begin
+           if(seq_in==1)
+	       next_state=STATE4;
+	       else 
+	       next_state=STATE2;
+		   end
+STATE4 : begin
+           if(seq_in==1)
+	       next_state=STATE1;
+	       else 
+	       next_state=STATE2;
+		   end
+
+default: next_state=IDLE;
+endcase
+end
+
+assign det_o = (state ==  STATE4) ? 1'b1:1'b0;
+
+endmodule  
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
