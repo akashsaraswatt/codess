@@ -1,3 +1,27 @@
+Q -write a Verilog code of clock generation to generation  ?
+/////RTL///////
+`timescale 1ps/1ps
+module clock_freq(clock);
+input clock;
+endmodule
+///////TB//////////////
+`timescale 1ps/1ps
+module clock_freq_tb();
+  reg clock;
+ 
+initial 
+begin
+clock = 0;
+//repeat(10) #10 clock = ~clock;
+
+end
+
+always #10 clock = ~clock;
+
+
+initial #500 $finish();
+endmodule
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Q -write a Verilog code of clock generation to generate 50 % duty cycle ?
 module main;
 reg clk;
