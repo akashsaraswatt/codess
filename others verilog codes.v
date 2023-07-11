@@ -74,4 +74,80 @@ endmodule
 # KERNEL: G=0111 B=0101
 # KERNEL: G=0101 B=0110
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Binary to 2's complement converter//
 
+module bin_complement_2s(in,out);
+  
+  input [3:0] in;
+  output  [3:0] out;
+  
+  wire [3:0] temp;
+  
+  assign temp = 4'b1111-in;
+  assign out = temp+4'b0001;
+endmodule
+////////////////////////////TB///////////////////////////
+module tb;
+  reg [3:0] in;
+  wire  [3:0] out;
+  
+  bin_complement_2s DUT (in,out);
+  initial
+    begin
+      in=4'b1110;
+      #10
+      in=4'b1101;
+      #10
+      in=4'b0001;
+      #100
+      $finish();
+    end
+  initial
+    begin
+      $monitor("in=%b out=%b",in,out);
+    end
+endmodule
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# KERNEL: in=1110 out=0010
+# KERNEL: in=1101 out=0011
+# KERNEL: in=0001 out=1111
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Binary to 1's complement converter//
+
+module bin_complement_2s(in,out);
+  
+  input [3:0] in;
+  output  [3:0] out;
+  
+  wire [3:0] temp;
+  
+  assign temp = 4'b1111-in;
+  assign out = temp;
+endmodule
+//////////////////////////////TB///////////////
+module tb;
+  reg [3:0] in;
+  wire  [3:0] out;
+  
+  bin_complement_2s DUT (in,out);
+  
+  initial
+    begin
+      in=4'b1110;
+      #10
+      in=4'b1101;
+      #10
+      in=4'b0001;
+      #100
+      $finish();
+    end
+  initial
+    begin
+      $monitor("in=%b out=%b",in,out);
+    end
+endmodule
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# KERNEL: in=1110 out=0001
+# KERNEL: in=1101 out=0010
+# KERNEL: in=0001 out=1110
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
