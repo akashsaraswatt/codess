@@ -151,3 +151,97 @@ endmodule
 # KERNEL: in=1101 out=0010
 # KERNEL: in=0001 out=1110
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ----------------UP_DOWN COUNTER-------------------------//
+
+module up_down_counter(clk,rst,up_down,q);
+  input logic clk,rst,up_down;
+  output logic [3:0] q;
+  
+  always@(posedge clk)
+    begin
+      if(!rst)
+        begin
+          q<= 4'b0000;
+        end
+      else if(up_down==1)
+        begin
+          q <= q+1;
+        end
+      else
+        begin
+        q <= q-1;
+        end
+    end
+endmodule
+/////////////////////////////TB//////////////////////////
+module tb;
+  logic clk,rst,up_down;
+  logic [3:0] q;
+  
+  up_down_counter DUT (.*);
+  
+  always #5 clk = !clk;
+  
+  initial
+    begin
+      clk=0;
+      rst=0;
+      #10
+      rst=1;
+      up_down=1;
+      #10;
+      up_down=0;
+      #100
+      $finish();
+    end
+  initial
+    begin
+      $dumpfile("dump.vcd");
+      $dumpvars();
+    end
+endmodule
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//---------------------------RING COUNTER------------------------------//
+module ring_counter #(parameter N=4)(clk,rst,count);
+  
+  input logic clk,rst;
+  output logic [N-1:0] count;
+  
+  always@(posedge clk)
+    begin
+      if(!rst)
+        count <= 4'b0001;
+      else
+        count <= {count[0],count[N-1:1]};
+    end
+endmodule
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//------RING COUNTER TB---------------------//
+module tb;
+  parameter N=4;
+  
+  logic clk,rst;
+  logic [N-1:0] count;
+  
+  ring_counter DUT(.*);
+  
+  
+  always #5 clk=!clk;
+  
+  initial
+    begin
+      clk=0;
+      rst=0;
+      #10
+      rst=1;
+      #100
+      $finish();
+    end
+  initial
+    begin
+      $dumpfile("dump.vcd");
+      $dumpvars();
+    end
+endmodule
+  
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
