@@ -1,11 +1,11 @@
 Q1 -constraint to generate the below pattern 7 17 27 37 47 57 67 ?////////////////
 class main;
-  rand bit [5:0] arr[];
+  rand bit [7:0] arr[];
   constraint c1 { arr.size() == 7;
     foreach (arr[i])
       if (i==0)
-	  a[i]==7;
-	  else a[i]==a[i-1]+10;
+	  arr[i]==7;
+                 else arr[i]==arr[i-1]+10;
     }
   function void print();
     $display("arr=%p",arr);
