@@ -89,22 +89,32 @@ end
 endmodule
 
 ////////////////////////////////////////////////////OR/////////////////////////////////////
+
 module main;
+  
 reg clk=1;
+  
 always begin
-  #6 clk =~clk;
- $display(" clk=%0b & time is =%0t",clk,$realtime);
-#4 clk =~clk;
- $display(" clk=%0b & time is =%0t",clk,$realtime);
+  #60
+  clk =~clk;
+  #40
+  clk =~clk;
   end
-initial begin
-    #50 $finish;
-end
-initial begin
+  initial
+    begin
+      $monitor(" clk=%0b & time is =%0t",clk,$realtime);
+    end
+initial
+  begin
+    #500 $finish;
+  end
+initial
+  begin
      $dumpvars;
      $dumpfile("dump.vcd");
-end
+  end
 endmodule
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 # KERNEL:  clk=0 & time is =6
