@@ -20,6 +20,34 @@ module tb;
       m.print();
   end
 endmodule
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class main;
+  rand bit [3:0] arr[];
+  constraint c1 { arr.size() == 9;
+    foreach (arr[i])
+      if (i==0)
+        arr[i]==9;
+                 else if(i<=4)
+                   arr[i]==arr[i-1]-2;
+                 else if(i==5)
+                   arr[i] ==8;
+                 else 
+                   arr[i]==arr[i-1]-2;
+    }
+  function void print();
+    $display("arr=%p",arr);
+  endfunction
+endclass
+
+module tb;
+  main m;
+  initial begin
+    m= new();
+      m.randomize();
+      m.print();
+  end
+endmodule
+	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Q1 -constraint to generate the below pattern 5 10 15 20 25 30 ?////////////////
 class main;
