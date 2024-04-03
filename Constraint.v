@@ -21,6 +21,40 @@ module tb;
   end
 endmodule
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Q -Write a constraint to find the sum of all the numbers in an array without using an array methods ?
+class main;
+  rand bit[3:0] a[5];
+  int sum=0;
+  
+  constraint c1 { unique{a};
+    foreach(a[i])
+    a[i] inside {[1:10]};}
+  
+  function void post_randomize();
+    foreach(a[i])
+      begin
+        sum=sum+a[i];
+      end
+    $display("value of array= %p",a);
+    $display("value of sum =%d",sum);
+  endfunction
+  
+endclass
+
+module tb;
+  main m;
+  
+  initial begin
+    m=new();
+    m.randomize();
+  end
+endmodule
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# KERNEL: value of array= '{7, 8, 6, 5, 10}
+# KERNEL: value of sum =         36	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 Q -Write constraint to generate pattern 9-7-5-3-1-8-6-4-2-0  ?
 class main;
   rand bit [3:0] arr[];
