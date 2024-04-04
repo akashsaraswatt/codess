@@ -1,3 +1,39 @@
+Q-The constraint for an array of 10 elements in which the first 5 elements are in increment in nature and the next 5 elements are in decrement nature.
+All elements in range of 50 to 100.
+All elements should be multiple of 5 ??
+	class first;
+  rand bit [7:0] a [10];
+  constraint c { foreach(a[i])
+    a[i] inside {[50:100]};
+                foreach(a[i])
+                a[i] %5==0;
+                unique {a};
+                   }
+  constraint incr { foreach(a[i])
+    if(i<5 )
+      a[i] <= a[i+1];
+                     }
+   constraint decr { foreach(a[i])
+     if(i>5 )
+       a[i] < a[i-1]; }
+  function void post_randomize();
+    $display(" array = %p",a);
+  endfunction
+endclass
+
+module tb;
+  first f; 
+  initial
+    begin
+      f=new();
+      f.randomize();
+    end
+endmodule
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#  array = '{50, 55, 60, 65, 85, 100, 95, 90, 80, 75}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Q1 -constraint to generate the below pattern 7 17 27 37 47 57 67 ?////////////////
 class main;
   rand bit [7:0] arr[];
