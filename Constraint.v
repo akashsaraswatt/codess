@@ -32,6 +32,41 @@ endmodule
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #  array = '{50, 55, 60, 65, 85, 100, 95, 90, 80, 75}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Ques. Write a constraint to generate sum of two variables which are equal to 5 then third variable must be 10 times of their sum ?
+	module tb;
+
+  class data;
+    
+    rand bit [4:0]a,b;
+   rand  bit [5:0]c;
+    
+    constraint c1{a+b==5;
+               solve a before c;
+                  solve b before c;
+                  c==10*(a+b);
+                 }
+  endclass
+  
+  data d;
+  
+  initial  begin
+    d = new();
+    repeat(5)
+      begin
+    d.randomize();
+    $display("value of abc : a= %0d, b= %0d , c=%0d", d.a , d.b , d.c);
+      end
+  end
+  
+endmodule
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# value of abc : a= 5, b= 0 , c=50
+# value of abc : a= 4, b= 1 , c=50
+# value of abc : a= 5, b= 0 , c=50
+# value of abc : a= 0, b= 5 , c=50
+# value of abc : a= 1, b= 4 , c=50
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Q: Write a constraint for 16-bit variable such that no two consecutive ones should be generated ?
 	class cons;
    rand bit[15:0]a;
